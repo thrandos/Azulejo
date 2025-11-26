@@ -1,0 +1,33 @@
+/* Bootstrapper reuses the launcher's look. Keep in sync if needed. */
+.root {
+    background-color: #f0f0f0;
+    font-family: "Segoe UI", "Tahoma", "Arial", sans-serif;
+    font-size: 12px;
+    -fx-font-family: "Segoe UI", "Tahoma", "Arial", sans-serif;
+    -fx-font-size: 12px;
+    -fx-background-color: #f0f0f0;
+}
+
+.label {
+    color: #333333;
+    font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+.button {
+    background-color: #f2f2f2;
+    border-color: #c0c0c0;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 6px 12px 6px 12px;
+    -fx-background-color: linear-gradient(#f2f2f2, #d6d6d6);
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 3px;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-padding: 6 12 6 12;
+}
+
+.button:hover { background-color: #f8f8f8; -fx-background-color: linear-gradient(#f8f8f8, #dadada); }
+.button:pressed { background-color: #d0d0d0; -fx-background-color: linear-gradient(#d0d0d0, #c0c0c0); }

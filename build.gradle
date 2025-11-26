@@ -1,0 +1,140 @@
+plugins {
+    id 'io.freefair.lombok' version '8.14.2'
+    id 'maven-publish'
+    id 'java'
+    id 'org.openrewrite.rewrite' version '7.14.1'
+    id "com.gradleup.shadow" version "9.0.0" apply false
+}
+
+repositories {
+    mavenCentral()
+}
+
+rewrite {
+    activeRecipe("org.openrewrite.java.migrate.UpgradeToJava21")
+}
+
+dependencies {
+    rewrite("org.openrewrite.recipe:rewrite-migrate-java:3.16.0")
+}
+
+println """
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]][]
+||=============================================================================||
+||:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::||
+||                                                                             ||
+||                           A project by Thrandos                             ||
+||                                                                             ||
+||                            -==  COASTLINE  ==-                              ||
+||                                                                             ||
+||                                                                             ||
+||                        _____         _       _                              ||
+||                       |  _  |___ _ _| |___  |_|___                          ||
+||                       |     |- _| | | | -_| | | . |                         ||
+||                       |__|__|___|___|_|___|_| |___|                         ||
+||                                           |___|                             ||
+||                                                                             ||
+||_____________________________________________________________________________||
+||                                                                             ||
+||                             Update "Antarctica"                             ||
+||                                [[  1.0.0  ]]                                ||
+||                                                                             ||
+||:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::||
+||               Output files will be in [subproject]/build/libs               ||
+||=============================================================================||
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]][]
+"""
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+
+    group = 'com.thrandos'
+    version = '1.0.0'
+
+    java {
+        toolchain {
+            // Compile with Java 21 toolchain
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    // Ensure bytecode targets Java 21 for all compiles
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 21
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    
+    plugins.withType(com.github.jengelman.gradle.plugins.shadow.ShadowApplicationPlugin) {
+            distributions {
+                main {
+                    contents {
+                        // Override bad defaults
+                        eachFile {}
+                    }
+                }
+            }
+        }
+
+    repositories {
+        mavenCentral()
+    }
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        // Java 8 turns on doclint which we fail
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+
+    tasks.withType(JavaExec) {
+        workingDir = new File(rootDir, "run/")
+        workingDir.mkdirs()
+    }
+
+    afterEvaluate {
+        if (plugins.hasPlugin("com.github.johnrengelman.shadow")) {
+            def shadowJarTask = tasks.findByName("shadowJar")
+            if (shadowJarTask != null) {
+                tasks.matching { it.name == "startScripts" || it.name == "distTar" || it.name == "distZip" }
+                    .configureEach { dependsOn(shadowJarTask) }
+            }
+        }
+    }
+
+    // Work around gradle shadow bug
+    // see https://github.com/johnrengelman/shadow/issues/713
+    
+    afterEvaluate {
+        startScripts {
+            dependsOn(shadowJar)
+        }
+
+        distTar {
+            dependsOn(shadowJar)
+        }
+
+        distZip {
+            dependsOn(shadowJar)
+        }
+
+        startShadowScripts {
+            dependsOn(jar)
+        }
+
+        shadowDistTar {
+            dependsOn(jar)
+        }
+
+        shadowDistZip {
+            dependsOn(jar)
+        }
+    }
+}
+
+tasks.named("clean") {
+    dependsOn(subprojects.collect { it.tasks.matching { t -> t.name == "clean" } })
+}
+

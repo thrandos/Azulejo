@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.thrandos.azulejo.launcher.bootstrap.fx.BootstrapFxController"
+      spacing="12" alignment="CENTER_LEFT" stylesheets="@/com/skcraft/launcher/fx/launcher.css"
+      prefWidth="420" prefHeight="140" styleClass="root">
+    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+    <Label fx:id="statusLabel" text="Preparing..." />
+    <ProgressBar fx:id="progressBar" prefWidth="380" progress="-1.0" />
+    <HBox alignment="CENTER_RIGHT" spacing="8">
+        <Button fx:id="cancelButton" text="Cancel" />
+    </HBox>
+</VBox>

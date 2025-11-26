@@ -1,0 +1,59 @@
+/*
+  ====================================================================
+  AZULEJO
+
+  Built for the Coastline server network
+  Copyright (C) 2025
+  Some base code copyright (C) 2010-2014 Albert Pham and contributors
+  Please see LICENSE.txt for more information.
+  ====================================================================
+*/
+
+
+package com.thrandos.azulejo.launcher.swing;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+/**
+ * Utility method to make {@link ActionListeners}.
+ */
+public final class ActionListeners {
+
+    private ActionListeners() {
+    }
+
+    public static ActionListener dispose(final Window window) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                window.dispose();
+            }
+        };
+    }
+
+    public static ActionListener openURL(final Component component, final String url) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SwingHelper.openURL(url, component);
+            }
+        };
+    }
+
+    public static ActionListener browseDir(
+            final Component component, final File dir, final boolean create) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (create) {
+                    dir.mkdirs();
+                }
+                SwingHelper.browseDir(dir, component);
+            }
+        };
+    }
+
+}

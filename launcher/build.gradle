@@ -1,0 +1,177 @@
+plugins {
+    id 'application'
+    id 'java-library'
+    id "com.gradleup.shadow" version "9.0.0"
+    id 'io.freefair.lombok' version '8.14.2'
+    id 'org.beryx.jlink' version '3.0.1'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+application {
+    mainClass = "com.thrandos.azulejo.launcher.Launcher"
+}
+
+// Configure JavaFX
+javafx {
+    version = "22.0.1"
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing']
+}
+
+dependencies {
+    api 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.3'
+    compileOnly "jakarta.annotation:jakarta.annotation-api:2.0.0"
+    api 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
+    api 'commons-lang:commons-lang:2.6'
+    api 'commons-io:commons-io:1.2'
+    api 'com.google.guava:guava:29.0-jre'
+    api 'com.beust:jcommander:1.82'
+    
+    // Keep MigLayout for now during transition, remove later
+    api 'com.miglayout:miglayout:3.7.4'
+    
+    api 'com.google.code.findbugs:jsr305:3.0.2'
+
+    implementation 'com.googlecode.plist:dd-plist:1.23'
+    implementation 'net.java.dev.jna:jna-platform:5.11.0'
+
+    runtimeOnly "org.glassfish.jaxb:jaxb-runtime:2.3.9"
+    
+    // JavaFX dependencies for older Java versions (if needed)
+    // implementation "org.openjfx:javafx-controls:22.0.1"
+    // implementation "org.openjfx:javafx-fxml:22.0.1"
+    // implementation "org.openjfx:javafx-web:22.0.1"
+}
+
+
+/* 
+tasks.named('shadowJar') {
+    dependsOn project(':launcher').tasks.named('shadowJar')
+} 
+*/
+
+
+processResources {
+    filesMatching('**/*.properties') {
+        filter {
+            it.replace('${project.version}', project.version)
+        }
+    }
+}
+
+afterEvaluate {
+    def shadowTask = tasks.findByName("shadowJar")
+    if (shadowTask != null) {
+        tasks.findByName("startScripts")?.dependsOn(shadowTask)
+        tasks.findByName("distTar")?.dependsOn(shadowTask)
+        tasks.findByName("distZip")?.dependsOn(shadowTask)
+        tasks.findByName("startShadowScripts")?.dependsOn(tasks.findByName("jar"))
+        tasks.findByName("shadowDistTar")?.dependsOn(tasks.findByName("jar"))
+        tasks.findByName("shadowDistZip")?.dependsOn(tasks.findByName("jar"))
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('all')
+    // Merge service files and drop duplicate license/notice noise
+    mergeServiceFiles()
+    exclude 'META-INF/LICENSE*', 'META-INF/NOTICE*', 'LICENSE*', 'NOTICE*', 'META-INF/AL2.0', 'META-INF/LGPL2.1'
+}
+
+build {
+    dependsOn(shadowJar)
+}
+
+// Configure jpackage to create Windows executable
+jlink {
+    mergedModule {
+        additive = true
+    }
+    
+    jpackage {
+        // Application metadata
+        imageName = 'Azulejo'
+        appVersion = project.version
+        vendor = 'Coastline'
+        
+        // Windows-specific options
+        installerType = 'exe'
+        installerName = 'Azulejo-Installer'
+        
+        // Additional options
+        imageOptions = [
+            '--win-menu',
+            '--win-shortcut'
+        ]
+        
+        installerOptions = [
+            '--win-dir-chooser',
+            '--win-menu-group', 'Azulejo'
+        ]
+    }
+}
+
+// Task to create Windows installer using jpackage
+task createInstallerWithJpackage(type: Exec) {
+    dependsOn shadowJar
+    
+    doFirst {
+    // Prefer JAVA_HOME, fallback to a typical JDK 21 path
+    def javaHome = System.getenv('JAVA_HOME') ?: 'C\\Program Files\\Java\\jdk-21'
+        def jpackageExe = "${javaHome}\\bin\\jpackage.exe"
+        def inputDir = shadowJar.destinationDirectory.get().asFile
+        def mainJar = shadowJar.archiveFileName.get()
+        def outputDir = new File(project.buildDir, 'jpackage-installer')
+        outputDir.mkdirs()
+        
+        println "Creating installer with jpackage..."
+        println "Input dir: ${inputDir}"
+        println "Main jar: ${mainJar}"
+        println "Output dir: ${outputDir}"
+        
+        commandLine jpackageExe,
+            '--type', 'app-image',
+            '--input', inputDir,
+            '--main-jar', mainJar,
+            '--main-class', application.mainClass.get(),
+            '--name', 'Azulejo',
+            '--app-version', project.version,
+            '--vendor', 'Coastline',
+            '--dest', outputDir,
+            '--icon', "${rootProject.projectDir}/azulejo-icon.ico"
+            // Note: --win-menu and --win-shortcut only work with installer types, not app-image
+    }
+}
+
+// Task to create executable with icon
+task createExeWithIcon(type: Exec) {
+    dependsOn shadowJar
+    
+    doFirst {
+    // Prefer JAVA_HOME, fallback to a typical JDK 21 path
+    def javaHome = System.getenv('JAVA_HOME') ?: 'C\\Program Files\\Java\\jdk-21'
+        def jpackageExe = "${javaHome}\\bin\\jpackage.exe"
+        def inputDir = shadowJar.destinationDirectory.get().asFile
+        def mainJar = shadowJar.archiveFileName.get()
+        def timestamp = System.currentTimeMillis()
+        def outputDir = new File(project.buildDir, "jpackage-exe-${timestamp}")
+        
+        outputDir.mkdirs()
+        
+        println "Creating executable with icon..."
+        println "Input dir: ${inputDir}"
+        println "Main jar: ${mainJar}"
+        println "Output dir: ${outputDir}"
+        println "Icon: ${rootProject.projectDir}/azulejo-icon.ico"
+        
+        commandLine jpackageExe,
+            '--type', 'app-image',
+            '--input', inputDir,
+            '--main-jar', mainJar,
+            '--main-class', application.mainClass.get(),
+            '--name', 'Azulejo',
+            '--app-version', project.version,
+            '--vendor', 'Coastline',
+            '--dest', outputDir,
+            '--icon', "${rootProject.projectDir}/azulejo-icon.ico"
+    }
+}

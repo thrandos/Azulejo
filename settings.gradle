@@ -1,0 +1,11 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal() // for Freefair plugins
+        mavenCentral()
+        google()
+    }
+}
+
+rootProject.name = 'Azulejo-Master'
+
+include 'launcher', 'launcher-fancy', 'launcher-builder', 'launcher-bootstrap', 'creator-tools'

@@ -1,0 +1,52 @@
+plugins {
+    id 'application'
+    id "com.gradleup.shadow" version "9.0.0"
+    id 'io.freefair.lombok' version '8.14.2'
+    id 'org.openrewrite.rewrite' version '7.14.1'
+}
+
+version = "2.1.0-SNAPSHOT"
+
+application {
+    mainClass = "com.thrandos.azulejo.launcher.creator.Creator"
+}
+
+dependencies {
+    compileOnly "jakarta.annotation:jakarta.annotation-api:2.0.0"
+
+    implementation(project(path: ':launcher-builder')) {
+        // Do not bring JavaFX into creator-tools runtime
+        exclude group: 'org.openjfx'
+    }
+    implementation 'org.eclipse.jetty:jetty-server:9.3.1.v20150714'
+    implementation 'com.jidesoft:jide-oss:3.6.18'
+}
+
+/* 
+tasks.named('shadowJar') {
+    dependsOn project(':launcher').tasks.named('shadowJar')
+}
+*/
+
+processResources {
+    filesMatching('**/*.properties') {
+        filter {
+            it.replace('${project.version}', project.version)
+        }
+    }
+}
+
+shadowJar {
+    archiveClassifier.set("")
+    mergeServiceFiles()
+    exclude 'META-INF/LICENSE*', 'META-INF/NOTICE*', 'LICENSE*', 'NOTICE*', 'META-INF/AL2.0', 'META-INF/LGPL2.1'
+}
+
+// Extra safety: strip JavaFX artifacts if pulled indirectly
+configurations.configureEach {
+    exclude group: 'org.openjfx'
+}
+
+build {
+    dependsOn(shadowJar)
+}

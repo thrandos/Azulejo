@@ -1,0 +1,6 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: com.thrandos.AzulejoUpgrade
+displayName: Upgrade Coastline Azulejo to Java 21
+recipeList:
+  - org.openrewrite.java.migrate.UpgradeJavaVersion:
+      version: 21

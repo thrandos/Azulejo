@@ -1,0 +1,178 @@
+/* Azulejo Launcher JavaFX Styling */
+
+/* Root styling */
+.root {
+    /* Standard CSS fallback for non-JavaFX consumers */
+    background-color: #f0f0f0;
+    font-family: "Segoe UI", "Tahoma", "Arial", sans-serif;
+    font-size: 12px;
+    -fx-font-family: "Segoe UI", "Tahoma", "Arial", sans-serif;
+    -fx-font-size: 12px;
+    -fx-background-color: #f0f0f0;
+}
+
+/* Menu bar styling */
+.menu-bar {
+    background-color: #e0e0e0; /* standard property for compatibility */
+    border-color: #c0c0c0;
+    border-width: 0 0 1 0;
+    -fx-background-color: #e0e0e0;
+    -fx-border-color: #c0c0c0;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Button styling */
+.button {
+    background-color: #f2f2f2; /* fallback for non-JavaFX */
+    border-color: #c0c0c0;
+    border-radius: 3px;
+    font-weight: bold;
+    padding: 6px 12px 6px 12px;
+    -fx-background-color: linear-gradient(#f2f2f2, #d6d6d6);
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 3px;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 3px;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-padding: 6 12 6 12;
+}
+
+.button:hover {
+    background-color: #f8f8f8;
+    -fx-background-color: linear-gradient(#f8f8f8, #dadada);
+}
+
+.button:pressed {
+    background-color: #d0d0d0;
+    -fx-background-color: linear-gradient(#d0d0d0, #c0c0c0);
+}
+
+.button:disabled {
+    opacity: 0.6;
+    -fx-opacity: 0.6;
+}
+
+/* Launch button special styling */
+#launchButton {
+    background-color: #4CAF50; /* fallback for non-JavaFX */
+    font-size: 14px;
+    padding: 8px 16px 8px 16px;
+    -fx-background-color: linear-gradient(#4CAF50, #45a049);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8 16 8 16;
+}
+
+#launchButton:hover {
+    background-color: #5CBF60;
+    -fx-background-color: linear-gradient(#5CBF60, #4CAF50);
+}
+
+#launchButton:pressed {
+    background-color: #3e8e41;
+    -fx-background-color: linear-gradient(#3e8e41, #357935);
+}
+
+/* Table styling */
+.table-view {
+    background-color: white;
+    border-color: #c0c0c0;
+    border-radius: 3px;
+    -fx-background-color: white;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 3px;
+}
+
+.table-view .column-header-background {
+    background-color: #e8e8e8;
+    border-color: #c0c0c0;
+    border-width: 0 0 1 0;
+    -fx-background-color: linear-gradient(#f0f0f0, #e0e0e0);
+    -fx-border-color: #c0c0c0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .column-header {
+    font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    background-color: white;
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    background-color: #f9f9f9;
+    -fx-background-color: #f9f9f9;
+}
+
+.table-row-cell:selected {
+    background-color: #3399ff;
+    color: white;
+    -fx-background-color: #3399ff;
+    -fx-text-fill: white;
+}
+
+.table-row-cell:hover {
+    background-color: #e6f3ff;
+    -fx-background-color: #e6f3ff;
+}
+
+/* CheckBox styling */
+.check-box {
+    color: #333333;
+    -fx-text-fill: #333333;
+}
+
+.check-box .box {
+    background-color: white;
+    border-color: #c0c0c0;
+    border-radius: 2px;
+    -fx-background-color: white;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 2px;
+}
+
+.check-box:selected .mark {
+    background-color: #3399ff;
+    -fx-background-color: #3399ff;
+}
+
+/* Label styling */
+.label {
+    color: #333333;
+    font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+}
+
+/* WebView styling */
+.web-view {
+    border-color: #c0c0c0;
+    border-radius: 3px;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 3px;
+}
+
+/* Split pane styling */
+.split-pane {
+    background-color: #f0f0f0;
+    -fx-background-color: #f0f0f0;
+}
+
+.split-pane-divider {
+    background-color: #c0c0c0;
+    padding: 0 2px 0 2px;
+    -fx-background-color: #c0c0c0;
+    -fx-padding: 0 2 0 2;
+}
+
+/* VBox and HBox spacing */
+.vbox, .hbox {
+    background-color: transparent;
+    -fx-background-color: transparent;
+}
