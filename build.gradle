@@ -92,7 +92,7 @@ subprojects {
         }
     }
 
-    // Work around gradle shadow bug
+     // Work around gradle shadow bug
     // see https://github.com/johnrengelman/shadow/issues/713
     
     afterEvaluate {

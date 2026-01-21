@@ -139,7 +139,7 @@ public class LaunchSupervisor {
 
         // Show process for the process retrieval
         ProgressDialog.showProgress(
-                window, processFuture, SharedLocale.tr("launcher.launchingTItle"), tr("launcher.launchingStatus", instance.getTitle()));
+                window, processFuture, SharedLocale.tr("launcher.launchingTitle"), tr("launcher.launchingStatus", instance.getTitle()));
 
         // If the process is started, get rid of this window
         Futures.addCallback(processFuture, new FutureCallback<Process>() {
