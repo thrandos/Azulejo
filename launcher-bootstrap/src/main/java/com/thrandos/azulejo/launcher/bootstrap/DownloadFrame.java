@@ -29,7 +29,7 @@ import static com.thrandos.azulejo.launcher.bootstrap.SharedLocale.tr;
 public class DownloadFrame extends JFrame {
 
     private Downloader downloader;
-    private Timer timer;
+    private transient Timer timer;
 
     private final JLabel label = new JLabel();
     private final JPanel progressPanel = new JPanel(new BorderLayout(0, 5));
