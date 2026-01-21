@@ -8,4 +8,4 @@ pluginManagement {
 
 rootProject.name = 'Azulejo-Master'
 
-include 'launcher', 'launcher-fancy', 'launcher-builder', 'launcher-bootstrap', 'creator-tools'
+include 'launcher', 'launcher-builder', 'launcher-bootstrap', 'creator-tools'
