@@ -53,9 +53,8 @@ import java.util.logging.Level;
 
 import static com.thrandos.azulejo.launcher.util.SharedLocale.tr;
 
-/**
- * The main entry point for the launcher.
- */
+// The main entry point for the launcher.
+
 @Log
 public final class Launcher {
 
@@ -115,9 +114,8 @@ public final class Launcher {
         updateManager.checkForUpdate(null);
     }
 
-    /**
-     * Updates any incorrect / unset configuration settings with defaults.
-     */
+    // Updates any incorrect / unset configuration settings with defaults.
+
     public void setDefaultConfig() {
         double configMax = config.getMaxMemory() / 1024.0;
         double suggestedMax = 2;

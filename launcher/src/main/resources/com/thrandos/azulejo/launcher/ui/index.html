@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azulejo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="root">
+        <div class="app-container" id="app-container">
+            <!-- Background placeholder -->
+            <div class="background-placeholder">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 732 258">
+                    <path d="M0 0H732V258H0V0Z" fill="#D9D9D9"></path>
+                </svg>
+            </div>
+
+            <!-- Hero background -->
+            <div class="hero-background">
+                <div class="hero-background-inner">
+                    <div class="hero-bg-base"></div>
+                    <div class="hero-bg-overflow placeholder-bg"></div>
+                    <div class="hero-bg-gradient"></div>
+                </div>
+            </div>
+
+            <!-- News background -->
+            <div class="news-background"></div>
+
+            <!-- Sidebar -->
+            <div class="sidebar"></div>
+
+            <!-- Settings button -->
+            <button class="settings-button" aria-label="Settings">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 31 31">
+                    <g clip-path="url(#clip0_1_146)">
+                        <path d="M15.5 14.8542V21.3125" stroke="#F5F5F4" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M15.5 9.70124L15.5134 9.68607" stroke="#F5F5F4" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M15.5 28.4167C22.6336 28.4167 28.4167 22.6336 28.4167 15.5C28.4167 8.36632 22.6336 2.58333 15.5 2.58333C8.36632 2.58333 2.58333 8.36632 2.58333 15.5C2.58333 22.6336 8.36632 28.4167 15.5 28.4167Z" stroke="#F5F5F4" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_1_146">
+                            <rect fill="white" height="31" width="31"></rect>
+                        </clipPath>
+                    </defs>
+                </svg>
+            </button>
+
+            <!-- Play button background -->
+            <div class="play-button-bg"></div>
+
+            <!-- Play icon -->
+            <div class="play-icon">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 40 40">
+                    <g>
+                        <path d="M11.5098 7.56137C10.8432 7.16633 10 7.6468 10 8.42165V31.5783C10 32.3532 10.8432 32.8337 11.5098 32.4387L31.0483 20.8603C31.7018 20.473 31.7018 19.527 31.0483 19.1397L11.5098 7.56137Z" fill="white" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Play text -->
+            <p class="text-play">Play</p>
+
+            <!-- Server card border -->
+            <div class="server-card-border">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 120 66">
+                    <path d="M10 1.5H110C114.694 1.5 118.5 5.30558 118.5 10V56C118.5 60.6944 114.694 64.5 110 64.5H10C5.30558 64.5 1.5 60.6944 1.5 56V10C1.5 5.30558 5.30558 1.5 10 1.5Z" stroke="#2B2B2B" stroke-width="3"></path>
+                </svg>
+            </div>
+
+            <!-- Version card -->
+            <div class="version-card"></div>
+
+            <!-- Icon container -->
+            <div class="icon-container">
+                <div class="icon-overflow placeholder-icon"></div>
+            </div>
+
+            <!-- Bottom nav container -->
+            <div class="bottom-nav-container"></div>
+            <div class="profile-icon"></div>
+            <div class="status-bar-full"></div>
+            <div class="status-bar-partial"></div>
+            <div class="instance-info-container"></div>
+
+            <!-- Navigation button 1 -->
+            <button class="nav-button-1" aria-label="Menu">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
+                    <g>
+                        <path d="M24 30C27.3138 30 30 27.3138 30 24C24 20.6862 27.3138 18 24 18C20.6862 18 18 20.6862 18 24C18 27.3138 20.6862 30 24 30Z" stroke="#4A4A4A" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M39.2448 20.7908L37.0494 15.4896L40 12L36 8L32.5294 10.9659L27.1156 8.73948L25.8706 4H21.962L20.6982 8.80226L15.4088 11.0319L12 8L8 12L10.9067 15.5777L8.745 20.8926L4 22V26L8.80222 27.311L11.0315 32.5994L8 36L12 40L15.5823 37.0806L20.794 39.2246L22 44H26L27.209 39.2264L32.5102 37.031C33.3938 37.6626 36 40 36 40L40 36L37.0318 32.4988L39.2278 27.196L43.9998 25.9544L44 22L39.2448 20.7908Z" stroke="#4A4A4A" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                    </g>
+                </svg>
+            </button>
+
+            <!-- Navigation button 2 -->
+            <button class="nav-button-2" aria-label="Alerts">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
+                    <g>
+                        <path d="M24 16V24" stroke="#4A4A4A" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M24 32.0206L24.0193 31.9978" stroke="#4A4A4A" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M24 44C35.0456 44 44 35.0456 44 24C44 12.9543 35.0456 4 24 4C12.9543 4 4 12.9543 4 24C4 27.6428 4.97394 31.0582 6.67564 34L5 43L14 41.3244C16.9417 43.026 20.3572 44 24 44Z" stroke="#4A4A4A" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                    </g>
+                </svg>
+            </button>
+
+            <!-- Navigation button 3 -->
+            <button class="nav-button-3" aria-label="Info">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
+                    <g>
+                        <path d="M24 44C35.0456 44 44 35.0456 44 24C44 12.9543 35.0456 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0456 12.9543 44 24 44Z" stroke="#4A4A4A" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M14 18L24 20M24 20L34 18M24 20V26M24 26L20 36M24 26L28 36" stroke="#4A4A4A" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M24.2727 14.1818C23.5197 14.1818 22.9091 13.6934 22.9091 13.0909C22.9091 12.4884 23.5197 12 24.2727 12C25.0257 12 25.6364 12.4884 25.6364 13.0909C25.6364 13.6934 25.0257 14.1818 24.2727 14.1818Z" fill="#4A4A4A" stroke="#4A4A4A" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                    </g>
+                </svg>
+            </button>
+
+            <!-- News card 1 -->
+            <div class="news-card-1-border"></div>
+            <div class="news-card-1-image">
+                <div class="news-image-wrapper">
+                    <div class="news-image-overflow placeholder-image"></div>
+                    <div class="news-gradient" style="background-image: linear-gradient(248.423deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);"></div>
+                </div>
+            </div>
+            <p class="news-title-1">Patch Notes 10/29</p>
+            <p class="news-type-1">Announcement</p>
+            <p class="news-date-1">1/13/26</p>
+
+            <!-- News card 2 -->
+            <div class="news-card-2-border"></div>
+            <div class="news-card-2-image">
+                <div class="news-image-wrapper">
+                    <div class="news-image-overflow placeholder-image"></div>
+                    <div class="news-gradient" style="background-image: linear-gradient(248.449deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);"></div>
+                </div>
+            </div>
+            <p class="news-title-2">Update 5.0: Instruments</p>
+            <p class="news-type-2">Announcement</p>
+            <p class="news-date-2">1/13/26</p>
+
+            <!-- Profile image -->
+            <div class="profile-image placeholder-icon"></div>
+
+            <!-- Version label -->
+            <p class="text-version-label">coastline-1.0.0b-uno</p>
+
+            <!-- Instance selector -->
+            <div class="instance-bg"></div>
+            <p class="text-instance-name">I ❤️ Coastline</p>
+            <p class="text-instance-label">Current Instance</p>
+            <div class="profile-avatar-2">
+                <div style="position: absolute; inset: 0; pointer-events: none; border-radius: 10px;">
+                    <div class="profile-bg"></div>
+                    <div class="profile-overflow"></div>
+                </div>
+            </div>
+
+            <!-- Plugin section -->
+            <div class="plugin-section-border"></div>
+            <div class="plugin-section-bg"></div>
+            <p class="plugin-title">Plugins will arrive soon!</p>
+            <p class="plugin-subtitle">Check back later.</p>
+
+            <!-- Empty section -->
+            <div class="empty-section-border"></div>
+            <div class="empty-section-bg"></div>
+            <p class="empty-title">Empty for now...</p>
+            <p class="empty-subtitle">New, shiny things will go here once they arrive.</p>
+
+            <!-- Version text -->
+            <p class="text-version">v1.0.0b</p>
+
+            <!-- Profile avatar 1 -->
+            <div class="profile-avatar-1">
+                <div style="position: absolute; inset: 0; pointer-events: none; border-radius: 10px;">
+                    <div class="profile-bg"></div>
+                    <div class="profile-overflow"></div>
+                </div>
+            </div>
+
+            <!-- Online indicator -->
+            <div class="online-indicator">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+                    <circle cx="8" cy="8" fill="#2AFF7C" r="8"></circle>
+                </svg>
+            </div>
+
+            <!-- Online text -->
+            <p class="text-online">3 online</p>
+
+            <!-- Settings icon (arrow) -->
+            <div class="settings-icon">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 35 35">
+                    <g>
+                        <path d="M13.125 8.75L21.875 17.5L13.125 26.25" stroke="#9F9F9F" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Logo -->
+            <div class="logo">
+                <div class="logo-overflow placeholder-image"></div>
+            </div>
+
+            <!-- Server info -->
+            <div class="server-info-container"></div>
+            <p class="server-status-label">Server Status</p>
+            <p class="server-status-value">Online</p>
+            <p class="playtime-label">Play Time</p>
+            <p class="playtime-value">102.7 hours</p>
+
+            <!-- Server status icon -->
+            <div class="server-status-icon">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
+                    <g>
+                        <path d="M6 38H24M24 38H42M24 38V26M24 26H36V10H12V26H24Z" stroke="#4B4B4B" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M18 18.02L18.0198 17.9978" stroke="#4B4B4B" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M24 18.02L24.0198 17.9978" stroke="#4B4B4B" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Clock icon -->
+            <div class="clock-icon">
+                <svg class="svg-block" fill="none" preserveAspectRatio="none" viewBox="0 0 42 42">
+                    <g>
+                        <path d="M21 10.5V21H31.5" stroke="#4B4B4B" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                        <path d="M21 38.5C30.6649 38.5 38.5 30.6649 38.5 21C38.5 11.335 30.6649 3.5 21 3.5C11.335 3.5 3.5 11.335 3.5 21C3.5 30.6649 11.335 38.5 21 38.5Z" stroke="#4B4B4B" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.16667"></path>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

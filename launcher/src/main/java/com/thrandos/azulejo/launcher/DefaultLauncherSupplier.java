@@ -14,6 +14,7 @@ package com.thrandos.azulejo.launcher;
 
 import com.google.common.base.Supplier;
 import com.thrandos.azulejo.launcher.dialog.LauncherFrame;
+import com.thrandos.azulejo.launcher.fx.LauncherFXApp;
 
 import java.awt.*;
 
@@ -27,7 +28,14 @@ public class DefaultLauncherSupplier implements Supplier<Window> {
 
     @Override
     public Window get() {
-        return new LauncherFrame(launcher);
+
+        LauncherFXApp.setLauncher(launcher);
+
+        new Thread(() -> {
+            javafx.application.Application.launch(LauncherFXApp.class);
+        }).start();
+
+        return new Frame(); // pretty sure this does placeholder 
     }
 
 }

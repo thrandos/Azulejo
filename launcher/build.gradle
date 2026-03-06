@@ -77,8 +77,22 @@ shadowJar {
     exclude 'META-INF/LICENSE*', 'META-INF/NOTICE*', 'LICENSE*', 'NOTICE*', 'META-INF/AL2.0', 'META-INF/LGPL2.1'
 }
 
+def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
+
+def resolveJpackageExe = {
+    def launcher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }.get()
+    def javaHome = launcher.metadata.installationPath.asFile
+    def executableName = isWindows ? 'jpackage.exe' : 'jpackage'
+    new File(javaHome, "bin/${executableName}").absolutePath
+}
+
 build {
     dependsOn(shadowJar)
+    if (isWindows) {
+        dependsOn('createExeWithIcon')
+    }
 }
 
 // Configure jpackage to create Windows executable
@@ -113,11 +127,10 @@ jlink {
 // Task to create Windows installer using jpackage
 task createInstallerWithJpackage(type: Exec) {
     dependsOn shadowJar
+    onlyIf { isWindows }
     
     doFirst {
-    // Prefer JAVA_HOME, fallback to a typical JDK 21 path
-    def javaHome = System.getenv('JAVA_HOME') ?: 'C\\Program Files\\Java\\jdk-21'
-        def jpackageExe = "${javaHome}\\bin\\jpackage.exe"
+        def jpackageExe = resolveJpackageExe()
         def inputDir = shadowJar.destinationDirectory.get().asFile
         def mainJar = shadowJar.archiveFileName.get()
         def outputDir = new File(project.buildDir, 'jpackage-installer')
@@ -129,7 +142,7 @@ task createInstallerWithJpackage(type: Exec) {
         println "Output dir: ${outputDir}"
         
         commandLine jpackageExe,
-            '--type', 'app-image',
+            '--type', 'exe',
             '--input', inputDir,
             '--main-jar', mainJar,
             '--main-class', application.mainClass.get(),
@@ -137,19 +150,21 @@ task createInstallerWithJpackage(type: Exec) {
             '--app-version', project.version,
             '--vendor', 'Coastline',
             '--dest', outputDir,
-            '--icon', "${rootProject.projectDir}/azulejo-icon.ico"
-            // Note: --win-menu and --win-shortcut only work with installer types, not app-image
+            '--icon', "${rootProject.projectDir}/azulejo-icon.ico",
+            '--win-menu',
+            '--win-shortcut',
+            '--win-dir-chooser',
+            '--win-menu-group', 'Azulejo'
     }
 }
 
 // Task to create executable with icon
 task createExeWithIcon(type: Exec) {
     dependsOn shadowJar
+    onlyIf { isWindows }
     
     doFirst {
-    // Prefer JAVA_HOME, fallback to a typical JDK 21 path
-    def javaHome = System.getenv('JAVA_HOME') ?: 'C\\Program Files\\Java\\jdk-21'
-        def jpackageExe = "${javaHome}\\bin\\jpackage.exe"
+        def jpackageExe = resolveJpackageExe()
         def inputDir = shadowJar.destinationDirectory.get().asFile
         def mainJar = shadowJar.archiveFileName.get()
         def timestamp = System.currentTimeMillis()

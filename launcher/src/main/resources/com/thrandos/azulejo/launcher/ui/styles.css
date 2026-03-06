@@ -1,0 +1,735 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
+    background: #000;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.app-container {
+    background: white;
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: top left;
+}
+
+/* Layout sections */
+.background-placeholder {
+    position: absolute;
+    height: 258px;
+    left: 1147px;
+    top: 782px;
+    width: 732px;
+}
+
+.hero-background {
+    position: absolute;
+    height: 693px;
+    left: 340px;
+    top: -11px;
+    width: 1915px;
+}
+
+.hero-background-inner {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.hero-bg-base {
+    position: absolute;
+    background: #1a1a1a;
+    inset: 0;
+}
+
+.hero-bg-overflow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.hero-bg-gradient {
+    position: absolute;
+    background: linear-gradient(to right, black, rgba(0, 0, 0, 0));
+    inset: 0;
+}
+
+.news-background {
+    position: absolute;
+    background: #1a1a1a;
+    height: 398px;
+    left: 340px;
+    top: 682px;
+    width: 1580px;
+}
+
+.sidebar {
+    position: absolute;
+    background: #121212;
+    height: 1081px;
+    left: 0;
+    top: 0;
+    width: 340px;
+}
+
+/* Buttons */
+.settings-button {
+    position: absolute;
+    background: #242424;
+    border: 3px solid #373737;
+    height: 111px;
+    left: 686px;
+    border-radius: 0 10px 10px 0;
+    top: 432px;
+    width: 102px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.settings-button:hover {
+    background: #2a2a2a;
+}
+
+.settings-button:active {
+    background: #1a1a1a;
+}
+
+.play-button-bg {
+    position: absolute;
+    background: linear-gradient(to bottom, #033ad3, #003ad3);
+    border: 3px solid #0046ff;
+    height: 111px;
+    left: 433px;
+    border-radius: 10px;
+    top: 432px;
+    width: 284px;
+}
+
+.nav-button-1,
+.nav-button-2,
+.nav-button-3 {
+    position: absolute;
+    background: #282828;
+    border: none;
+    height: 81px;
+    border-radius: 5px;
+    top: 871px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.nav-button-1:hover,
+.nav-button-2:hover,
+.nav-button-3:hover {
+    background: #333;
+}
+
+.nav-button-1:active,
+.nav-button-2:active,
+.nav-button-3:active {
+    background: #222;
+}
+
+.nav-button-1 {
+    left: 37px;
+    width: 80px;
+}
+
+.nav-button-2 {
+    left: 129px;
+    width: 81px;
+}
+
+.nav-button-3 {
+    left: 222px;
+    width: 80px;
+}
+
+/* Cards and containers */
+.server-card-border {
+    position: absolute;
+    height: 66px;
+    left: 25px;
+    top: 982px;
+    width: 120px;
+}
+
+.version-card {
+    position: absolute;
+    background: rgba(18, 18, 18, 0);
+    border: 3px solid #2b2b2b;
+    height: 66px;
+    left: 163px;
+    border-radius: 10px;
+    top: 982px;
+    width: 151px;
+}
+
+.icon-container {
+    position: absolute;
+    height: 48px;
+    left: 88px;
+    top: 991px;
+    width: 49px;
+}
+
+.icon-overflow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.bottom-nav-container {
+    position: absolute;
+    background: rgba(18, 18, 18, 0);
+    border: 3px solid #2b2b2b;
+    height: 105px;
+    left: 25px;
+    border-radius: 15px;
+    top: 859px;
+    width: 289px;
+}
+
+.profile-icon {
+    position: absolute;
+    background: rgba(18, 18, 18, 0);
+    border: 3px solid #2b2b2b;
+    left: 25px;
+    border-radius: 15px;
+    width: 64px;
+    height: 64px;
+    top: 28px;
+}
+
+.status-bar-full {
+    position: absolute;
+    background: rgba(18, 18, 18, 0);
+    border: 3px solid #2b2b2b;
+    height: 64px;
+    left: 97px;
+    border-radius: 15px;
+    top: 28px;
+    width: 218px;
+}
+
+.status-bar-partial {
+    position: absolute;
+    background: rgba(18, 18, 18, 0);
+    border: 3px solid #2b2b2b;
+    height: 64px;
+    left: 97px;
+    border-radius: 15px;
+    top: 28px;
+    width: 148px;
+}
+
+.instance-info-container {
+    position: absolute;
+    background: rgba(18, 18, 18, 0);
+    border: 3px solid #2b2b2b;
+    height: 126px;
+    left: 426px;
+    border-radius: 15px;
+    top: 425px;
+    width: 369px;
+}
+
+/* News cards */
+.news-card-1-border,
+.news-card-2-border {
+    position: absolute;
+    background: rgba(18, 18, 18, 0);
+    border: 3px solid #282828;
+    height: 258px;
+    border-radius: 15px;
+    top: 798px;
+}
+
+.news-card-1-border {
+    left: 365px;
+    width: 757px;
+}
+
+.news-card-2-border {
+    left: 1138px;
+    width: 756px;
+}
+
+.news-card-1-image,
+.news-card-2-image {
+    position: absolute;
+    height: 246px;
+    border-radius: 10px;
+    top: 804px;
+}
+
+.news-card-1-image {
+    left: 372px;
+    width: 743px;
+}
+
+.news-card-2-image {
+    left: 1145px;
+    width: 742px;
+}
+
+.news-image-wrapper {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 10px;
+}
+
+.news-image-overflow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.news-gradient {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+}
+
+/* Plugin section */
+.plugin-section-border {
+    position: absolute;
+    background: rgba(18, 18, 18, 0);
+    border: 3px solid #2b2b2b;
+    height: 84px;
+    left: 1566px;
+    border-radius: 15px;
+    top: 698px;
+    width: 328.178px;
+}
+
+.plugin-section-bg {
+    position: absolute;
+    background: #333;
+    height: 70px;
+    left: 1573.22px;
+    border-radius: 11px;
+    top: 705px;
+    width: 313.73px;
+}
+
+/* Empty section */
+.empty-section-border {
+    position: absolute;
+    background: rgba(18, 18, 18, 0);
+    border: 3px solid #2b2b2b;
+    height: 240px;
+    left: 25px;
+    border-radius: 15px;
+    top: 106px;
+    width: 289.068px;
+}
+
+.empty-section-bg {
+    position: absolute;
+    background: #333;
+    height: 226px;
+    left: 31.53px;
+    border-radius: 11px;
+    top: 113px;
+    width: 276.013px;
+}
+
+/* Icons */
+.play-icon {
+    position: absolute;
+    left: 504px;
+    width: 40px;
+    height: 40px;
+    top: 468px;
+}
+
+.settings-icon {
+    position: absolute;
+    left: 265px;
+    width: 35px;
+    height: 35px;
+    top: 42px;
+}
+
+.server-status-icon {
+    position: absolute;
+    left: 382.77px;
+    width: 48px;
+    height: 48px;
+    top: 715px;
+}
+
+.clock-icon {
+    position: absolute;
+    left: 620.77px;
+    width: 42px;
+    height: 42px;
+    top: 719px;
+}
+
+/* Profile images */
+.profile-image {
+    position: absolute;
+    left: 34px;
+    width: 48px;
+    height: 48px;
+    top: 991px;
+}
+
+.profile-avatar-1 {
+    position: absolute;
+    left: 32px;
+    border-radius: 10px;
+    width: 50px;
+    height: 50px;
+    top: 35px;
+}
+
+.profile-avatar-2 {
+    position: absolute;
+    left: 433px;
+    border-radius: 10px;
+    width: 50px;
+    height: 50px;
+    top: 355px;
+}
+
+.instance-bg {
+    position: absolute;
+    background: #121212;
+    border: 3px solid #2b2b2b;
+    height: 64px;
+    left: 426px;
+    border-radius: 15px;
+    top: 348px;
+    width: 369px;
+}
+
+.profile-bg {
+    position: absolute;
+    background: #2a2a2a;
+    inset: 0;
+    border-radius: 10px;
+}
+
+.profile-overflow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+/* Status indicator */
+.online-indicator {
+    position: absolute;
+    left: 115px;
+    width: 16px;
+    height: 16px;
+    top: 52px;
+}
+
+/* Logo */
+.logo {
+    position: absolute;
+    height: 108px;
+    left: 426px;
+    top: 125px;
+    width: 493px;
+}
+
+.logo-overflow {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.server-info-container {
+    position: absolute;
+    height: 70px;
+    left: 365px;
+    top: 705px;
+    width: 468px;
+}
+
+/* Text styles */
+.text-play {
+    position: absolute;
+    font-weight: 700;
+    height: 49px;
+    line-height: normal;
+    left: 560px;
+    font-style: normal;
+    color: #f5f5f4;
+    font-size: 40px;
+    top: 462px;
+    width: 85px;
+}
+
+.text-version-label {
+    position: absolute;
+    font-weight: 400;
+    height: 40px;
+    line-height: normal;
+    left: 426px;
+    font-style: normal;
+    color: #474747;
+    font-size: 24px;
+    top: 564px;
+    width: 320px;
+}
+
+.text-instance-name {
+    position: absolute;
+    font-weight: 600;
+    height: 23px;
+    line-height: normal;
+    left: 495px;
+    font-style: normal;
+    color: #c0c0c0;
+    font-size: 20px;
+    top: 356px;
+    width: 320px;
+}
+
+.text-instance-label {
+    position: absolute;
+    font-weight: 400;
+    height: 23px;
+    line-height: normal;
+    left: 494px;
+    font-style: normal;
+    color: #909090;
+    font-size: 20px;
+    top: 382px;
+    width: 320px;
+}
+
+.text-version {
+    position: absolute;
+    font-weight: 600;
+    height: 28px;
+    line-height: normal;
+    left: 181px;
+    font-style: normal;
+    color: #3a3a3a;
+    font-size: 32px;
+    top: 997px;
+    width: 117px;
+}
+
+.text-online {
+    position: absolute;
+    font-weight: 600;
+    line-height: normal;
+    left: 142px;
+    font-style: normal;
+    color: #f5f5f4;
+    font-size: 20px;
+    top: 48px;
+}
+
+/* News card text */
+.news-title-1,
+.news-title-2 {
+    position: absolute;
+    font-weight: 700;
+    line-height: normal;
+    font-style: normal;
+    color: #f5f5f4;
+    font-size: 36px;
+    top: 990px;
+}
+
+.news-title-1 {
+    left: 392.14px;
+    width: 365.751px;
+}
+
+.news-title-2 {
+    left: 1160.42px;
+    width: 474.749px;
+}
+
+.news-type-1,
+.news-type-2 {
+    position: absolute;
+    font-weight: 500;
+    line-height: normal;
+    font-style: normal;
+    color: #f5f5f4;
+    font-size: 24px;
+    top: 953px;
+}
+
+.news-type-1 {
+    left: 392.14px;
+    width: 222.298px;
+}
+
+.news-type-2 {
+    left: 1160.42px;
+    width: 206.746px;
+}
+
+.news-date-1,
+.news-date-2 {
+    position: absolute;
+    font-weight: 300;
+    line-height: normal;
+    font-style: normal;
+    color: #f5f5f4;
+    font-size: 20px;
+    top: 1006px;
+}
+
+.news-date-1 {
+    left: 1019.61px;
+    width: 79.94px;
+}
+
+.news-date-2 {
+    left: 1787.22px;
+    width: 82.042px;
+}
+
+.plugin-title,
+.plugin-subtitle {
+    position: absolute;
+    color: #8d8d8d;
+    font-size: 20px;
+    line-height: normal;
+    font-style: normal;
+    height: 27px;
+    width: 245.617px;
+}
+
+.plugin-title {
+    font-weight: 600;
+    left: 1589.74px;
+    top: 715px;
+}
+
+.plugin-subtitle {
+    font-weight: 400;
+    left: 1588.7px;
+    top: 742px;
+}
+
+.empty-title,
+.empty-subtitle {
+    position: absolute;
+    color: #8d8d8d;
+    font-size: 20px;
+    line-height: normal;
+    font-style: normal;
+    height: 27px;
+    width: 216.346px;
+}
+
+.empty-title {
+    font-weight: 600;
+    left: 45.91px;
+    top: 123px;
+}
+
+.empty-subtitle {
+    font-weight: 400;
+    left: 45px;
+    top: 151px;
+}
+
+.server-status-label,
+.server-status-value {
+    position: absolute;
+    line-height: normal;
+    font-style: normal;
+    font-size: 20px;
+    left: 450.34px;
+}
+
+.server-status-label {
+    font-weight: 700;
+    color: #5b5b5b;
+    top: 715px;
+    width: 138.289px;
+}
+
+.server-status-value {
+    font-weight: 500;
+    color: #484848;
+    top: 740px;
+    width: 62.952px;
+}
+
+.playtime-label,
+.playtime-value {
+    position: absolute;
+    line-height: normal;
+    font-style: normal;
+    font-size: 20px;
+    left: 688.18px;
+}
+
+.playtime-label {
+    font-weight: 700;
+    color: #5b5b5b;
+    top: 716px;
+    width: 98.04px;
+}
+
+.playtime-value {
+    font-weight: 500;
+    color: #484848;
+    top: 741px;
+    width: 115.585px;
+}
+
+/* Utility classes */
+.svg-block {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.placeholder-bg {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+.placeholder-image {
+    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+}
+
+.placeholder-icon {
+    background: radial-gradient(circle, #4a4a4a 0%, #2a2a2a 100%);
+}
