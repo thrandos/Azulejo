@@ -473,50 +473,35 @@ public final class Launcher {
      *
      * @param args args
      */
+
+
+    // This code launches the CLI version. JavaFX version is commented out below.
+    public static void main(final String[] args) {
+    setupLogger();
+    try {
+        Launcher launcher = createFromArguments(args);
+        new com.thrandos.azulejo.launcher.cli.LauncherCLI(launcher).run();
+    } catch (Exception e) {
+        System.err.println("Failed to start launcher: " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    }
+
+}
+
+/*
     public static void main(final String[] args) {
         setupLogger();
-        
-        // Check if JavaFX should be used
-        boolean useJavaFX = shouldUseJavaFX(args);
-        
-        if (useJavaFX) {
-            // Launch JavaFX application
-            try {
-                Class<?> appClass = Class.forName("com.thrandos.azulejo.launcher.fx.LauncherApp");
-                java.lang.reflect.Method launchMethod = appClass.getMethod("main", String[].class);
-                launchMethod.invoke(null, (Object) args);
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to launch JavaFX, falling back to Swing", e);
-                useJavaFX = false;
-            }
-        }
-        
-        if (!useJavaFX) {
-            // Use original Swing launcher
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Launcher launcher = createFromArguments(args);
-                        SwingHelper.setSwingProperties(tr("launcher.appTitle", launcher.getVersion()));
-                        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                        launcher.showLauncherWindow();
-                    } catch (Throwable t) {
-                        log.log(Level.WARNING, "Load failure", t);
-                        SwingHelper.showErrorDialog(null, "Uh oh! The updater couldn't be opened because a " +
-                                "problem was encountered.", "Launcher error", t);
-                    }
-                }
-            });
-        }
+        // Always launch the new JavaFX WebView UI
+        javafx.application.Application.launch(com.thrandos.azulejo.launcher.fx.LauncherFXApp.class, args);
     }
     
-    /**
-     * Determine if JavaFX should be used based on arguments or system properties.
-     * 
-     * @param args command line arguments
-     * @return true if JavaFX should be used
-     */
+    // Determine if JavaFX should be used based on arguments or system properties. 
+
+    // @param args command line arguments
+    // @return true if JavaFX should be used
+    
     private static boolean shouldUseJavaFX(String[] args) {
         // Check for explicit UI arguments
         for (String arg : args) {
@@ -534,3 +519,4 @@ public final class Launcher {
     }
 
 }
+*/

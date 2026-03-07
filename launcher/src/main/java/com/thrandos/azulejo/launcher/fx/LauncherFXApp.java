@@ -19,9 +19,9 @@ public class LauncherFXApp extends Application {
 public void start(Stage stage) {
     WebView webView = new WebView();
 
-    URL ui = getClass().getResource("/launcher/ui/index.html");
+    URL ui = getClass().getResource("/com/thrandos/azulejo/launcher/ui/index.html");
     if (ui == null) {
-        throw new IllegalStateException("Missing resource: /launcher/ui/index.html you're cooked buddy"); // slightly less professional exception message
+        throw new IllegalStateException("Missing resource: /com/thrandos/azulejo/launcher/ui/index.html you're cooked buddy"); // slightly less professional of the exception messages
     }
 
     webView.getEngine().load(ui.toExternalForm());

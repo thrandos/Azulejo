@@ -21,6 +21,7 @@ import com.thrandos.azulejo.launcher.dialog.AboutDialog;
 import com.thrandos.azulejo.launcher.dialog.ConfigurationDialog;
 import com.thrandos.azulejo.launcher.launch.LaunchOptions;
 import com.thrandos.azulejo.launcher.launch.LaunchOptions.UpdatePolicy;
+/* 
 import com.thrandos.azulejo.launcher.launch.LaunchSupervisor;
 import com.thrandos.azulejo.launcher.model.modpack.PackageList;
 import com.thrandos.azulejo.launcher.persistence.Persistence;
@@ -28,6 +29,7 @@ import com.thrandos.azulejo.launcher.swing.InstanceTable;
 import com.thrandos.azulejo.launcher.swing.InstanceTableModel;
 import com.thrandos.azulejo.launcher.util.SharedLocale;
 import com.thrandos.azulejo.concurrency.ObservableFuture;
+*/
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -187,6 +187,7 @@ task createExeWithIcon(type: Exec) {
             '--app-version', project.version,
             '--vendor', 'Coastline',
             '--dest', outputDir,
-            '--icon', "${rootProject.projectDir}/azulejo-icon.ico"
+            '--icon', "${rootProject.projectDir}/azulejo-icon.ico",
+            '--win-console' // this '--win-console' is necessary for the CLI interface
     }
 }
