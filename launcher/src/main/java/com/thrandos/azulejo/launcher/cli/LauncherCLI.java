@@ -12,7 +12,11 @@ import com.thrandos.azulejo.launcher.Instance;
 import com.thrandos.azulejo.launcher.InstanceList;
 import com.thrandos.azulejo.launcher.Launcher;
 import com.thrandos.azulejo.launcher.auth.AccountList;
+import com.thrandos.azulejo.launcher.auth.LoginService;
 import com.thrandos.azulejo.launcher.auth.SavedSession;
+import com.thrandos.azulejo.launcher.auth.Session;
+import com.thrandos.azulejo.launcher.launch.LaunchListener;
+import com.thrandos.azulejo.launcher.launch.LaunchOptions;
 import com.thrandos.azulejo.launcher.persistence.Persistence;
 
 /*
@@ -127,7 +131,7 @@ public class LauncherCLI {
         
         System.out.println(DIM + " Made by Thrandos. Copyright 2025-26." + RESET);
         System.out.println(DIM + " A Java-based Minecraft launcher for the Coastline Server Network" + RESET);
-        System.out.println(DIM + " Press " + RESET + WHITE + "H + Enter" + RESET + DIM + " for help" + RESET);
+        System.out.println(DIM + " Press " + RESET + WHITE + "h + enter" + RESET + DIM + " for help" + RESET);
         System.out.println();
         
         System.out.println(LIGHT_CYAN + "  (i) " + WHITE + "Azulejo is still in beta. A complete UI is coming soon." + RESET);
@@ -139,10 +143,10 @@ public class LauncherCLI {
     
     // menu options printMainOptions
     private void printMainOptions() {
-        System.out.println(LIGHT_GREEN + " ENTER" + RESET + "  ➜  Launch Coastline");
-        System.out.println(WHITE + " M" + RESET + "      ➜  Open mods folder");
-        System.out.println(WHITE + " S" + RESET + "      ➜  Settings");
-        System.out.println(WHITE + " Q" + RESET + "      ➜  Quit");
+        System.out.println(LIGHT_GREEN + " ENTER" + RESET + DIM + "      ->  Launch Coastline" + RESET);
+        System.out.println(WHITE + " m + enter" + RESET + DIM + "  ->  Open mods folder" + RESET);
+        System.out.println(WHITE + " s + enter" + RESET + DIM + "  ->  Settings" + RESET);
+        System.out.println(WHITE + " q + enter" + RESET + DIM + "  ->  Quit" + RESET);
         System.out.println();
     }
     
@@ -160,10 +164,10 @@ public class LauncherCLI {
         System.out.println();
         System.out.println();
         System.out.println(BRIGHT_WHITE + "Shortcuts:" + RESET);
-        System.out.println(CYAN + "  R" + RESET + "  ➜  Reload/refresh instances");
-        System.out.println(CYAN + "  B" + RESET + "  ➜  Open bug report form in browser");
-        System.out.println(CYAN + "  A" + RESET + "  ➜  Manage accounts");
-        System.out.println(CYAN + "  C" + RESET + "  ➜  Clear console");
+        System.out.println(WHITE + "  R" + RESET + DIM + "  ->  Reload/refresh instances" + RESET);
+        System.out.println(WHITE + "  B" + RESET + DIM + "  ->  Open bug report form in browser" + RESET);
+        System.out.println(WHITE + "  A" + RESET + DIM + "  ->  Manage accounts" + RESET);
+        System.out.println(WHITE + "  C" + RESET + DIM + "  ->  Clear console" + RESET);
         System.out.println();
         printMainOptions();
         printPrompt();
@@ -239,40 +243,70 @@ public class LauncherCLI {
     
     // this is the launch with progress seen above
     private void launchWithProgress(Instance instance) {
-        SavedSession session = launcher.getAccounts().getElementAt(0);
+        SavedSession savedSession = launcher.getAccounts().getElementAt(0);
         
         System.out.println();
         System.out.println(BRIGHT_WHITE + "||       Coastline is booting up.       ||" + RESET);
         System.out.println();
         
-        // Simulated progress bar (actual launch integration TODO)
-        String[] stages = {
-            "Checking files...",
-            "Verifying assets...",
-            "Loading libraries...",
-            "Building shader cache...",
-            "Starting game..."
-        };
-        
+        // Step 1: Restore the session (authenticate)
+        System.out.println(DIM + "Authenticating..." + RESET);
+        Session session;
         try {
-            for (int stage = 0; stage < stages.length; stage++) {
-                int progress = (stage + 1) * 20;
-                printProgressBar(progress, stages[stage]);
-                Thread.sleep(300); // Simulated delay
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            LoginService loginService = launcher.getLoginService(savedSession.getType());
+            session = loginService.restore(savedSession);
+            System.out.println(GREEN + "Logged in as " + session.getName() + RESET);
+        } catch (Exception e) {
+            System.out.println(RED + "Authentication failed: " + e.getMessage() + RESET);
+            System.out.println(YELLOW + "Try removing and re-adding your account." + RESET);
+            printPrompt();
+            return;
         }
         
-        System.out.println();
-        System.out.println(GREEN + "Launching " + instance.getTitle() + " as " + session.getUsername() + "..." + RESET);
-        System.out.println(DIM + "||  Problems? Reach out on our Discord. ||" + RESET);
+        // Step 2: Build launch options
+        LaunchOptions options = new LaunchOptions.Builder()
+                .setInstance(instance)
+                .setSession(session)
+                .setListener(new CLILaunchListener())
+                .setUpdatePolicy(LaunchOptions.UpdatePolicy.UPDATE_IF_SESSION_ONLINE)
+                .build();
+        
+        // Step 3: Launch the game
+        System.out.println(DIM + "Preparing to launch..." + RESET);
         System.out.println();
         
-        // TODO: Wire up actual launch via launcher.getLaunchSupervisor()
-        System.out.println(YELLOW + "(Full launch integration pending)" + RESET);
+        try {
+            launcher.getLaunchSupervisor().launch(options);
+            System.out.println(GREEN + "Game launched! The launcher will close when the game exits." + RESET);
+        } catch (Exception e) {
+            System.out.println(RED + "Launch failed: " + e.getMessage() + RESET);
+            LOGGER.severe("Launch error: " + e.getMessage());
+            printPrompt();
+        }
+    }
+    
+    /**
+     * CLI-friendly launch listener that prints status updates to console.
+     */
+    private class CLILaunchListener implements LaunchListener {
+        @Override
+        public void instancesUpdated() {
+            System.out.println(DIM + "Instances updated." + RESET);
+        }
         
-        printPrompt();
+        @Override
+        public void gameStarted() {
+            System.out.println(GREEN + "\n=== GAME STARTED ==="  + RESET);
+            System.out.println(DIM + "Azulejo is running in the background." + RESET);
+            System.out.println(DIM + "The launcher will close when you exit the game." + RESET);
+        }
+        
+        @Override
+        public void gameClosed() {
+            System.out.println(YELLOW + "\nGame closed. Goodbye!" + RESET);
+            scanner.close();
+            System.exit(0);
+        }
     }
     
     private void printProgressBar(int percent, String message) {
@@ -362,10 +396,10 @@ public class LauncherCLI {
             }
             
             System.out.println();
-            System.out.println(CYAN + "  1" + RESET + " ➜ Add Account (Microsoft)");
-            System.out.println(CYAN + "  2" + RESET + " ➜ Remove Account");
-            System.out.println(DIM + "  0" + RESET + " ➜ Back");
-            System.out.print(BRIGHT_WHITE + "\nChoice: " + RESET);
+            System.out.println(CYAN + "  1" + RESET + DIM + " -> Add Account (Microsoft)" + RESET);
+            System.out.println(CYAN + "  2" + RESET + DIM + " -> Remove Account" + RESET);
+            System.out.println(DIM + "  0" + RESET + DIM + " -> Back" + RESET);
+            System.out.print(BRIGHT_WHITE + " > " + RESET);
             
             String choice = scanner.nextLine().trim();
             switch (choice) {
@@ -436,10 +470,10 @@ public class LauncherCLI {
                 config.isOfflineEnabled() ? "Enabled" : "Disabled");
             
             System.out.println();
-            System.out.println(CYAN + "  1" + RESET + " ➜ Configure Memory");
-            System.out.println(CYAN + "  2" + RESET + " ➜ Configure Launch Args");
-            System.out.println(CYAN + "  3" + RESET + " ➜ Reset to Defaults");
-            System.out.println(DIM + "  0" + RESET + " ➜ Back (saves automatically)");
+            System.out.println(CYAN + "  1" + RESET + "  ->  Configure Memory");
+            System.out.println(CYAN + "  2" + RESET + "  ->  Configure Launch Args");
+            System.out.println(CYAN + "  3" + RESET + "  ->  Reset to Defaults");
+            System.out.println(DIM + "  0" + RESET + "  ->  Back (saves automatically)");
             System.out.print(BRIGHT_WHITE + "\nChoice: " + RESET);
             
             String choice = scanner.nextLine().trim();
