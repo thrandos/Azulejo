@@ -13,9 +13,10 @@
 */
 
 /* 
-   =========================================================      
-     _____   { ? }
-    | .  .|
+  ////////////////////////////////////////////////////////
+  
+    _____   { ? }
+   | .  .|
    DefaultProgress.java is a simple implementation of the 
    ProgressObservable interface, which is used to track 
    the progress of tasks in the launcher. It has two 
@@ -27,7 +28,8 @@
    PROGRESS (double)
    Represents percentage of completion. Value of -1 
    indicates that the progress is indeterminate.
-   ========================================================= 
+
+  ////////////////////////////////////////////////////////
 */
 
 package com.thrandos.azulejo.concurrency;
