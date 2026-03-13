@@ -20,11 +20,13 @@ import com.thrandos.azulejo.launcher.launch.LaunchOptions;
 import com.thrandos.azulejo.launcher.persistence.Persistence;
 
 /*
+
 Another amazing idea from ME!
 
 This is the CLI UI for Azulejo. 
 I plan to keep it once we switch to JavaFX as a cool little extra bit.
 FYI I have never worked with CLI or ANSI codes before so good luck to me!
+
 */
 
 public class LauncherCLI {
@@ -103,13 +105,13 @@ public class LauncherCLI {
     }
     
     private void enableAnsiSupport() {
-        // Windows 10+ supports ANSI natively, but we need to enable it
+        // Windows 10+ supports ANSI natively but it needs to be enabled so here I am enabling it
         try {
             if (System.getProperty("os.name").toLowerCase().contains("win")) {
                 new ProcessBuilder("cmd", "/c", "").inheritIO().start().waitFor();
             }
         } catch (Exception ignored) {
-            // If it fails, colors just won't work
+            // If it fails then colors just won't work
         }
     }
     
@@ -141,7 +143,7 @@ public class LauncherCLI {
         printPrompt();
     }
     
-    // menu options printMainOptions
+    // menu options are printMainOptions
     private void printMainOptions() {
         System.out.println(LIGHT_GREEN + " ENTER" + RESET + DIM + "      ->  Launch Coastline" + RESET);
         System.out.println(WHITE + " m + enter" + RESET + DIM + "  ->  Open mods folder" + RESET);
@@ -150,7 +152,7 @@ public class LauncherCLI {
         System.out.println();
     }
     
-    
+    // the silly little prompt thing
     private void printPrompt() {
         System.out.print(BRIGHT_WHITE + " > " + RESET);
     }
@@ -160,6 +162,7 @@ public class LauncherCLI {
         System.out.flush();
     }
     
+    // the help menu
     private void showHelp() {
         System.out.println();
         System.out.println();
@@ -173,6 +176,7 @@ public class LauncherCLI {
         printPrompt();
     }
     
+    // fun part
     private void launchCoastline() {
         // check for instances
         InstanceList instances = launcher.getInstances();
@@ -249,7 +253,7 @@ public class LauncherCLI {
         System.out.println(BRIGHT_WHITE + "||       Coastline is booting up.       ||" + RESET);
         System.out.println();
         
-        // Step 1: Restore the session (authenticate)
+        // Step 1: Restore session (authenticate)
         System.out.println(DIM + "Authenticating..." + RESET);
         Session session;
         try {
@@ -271,13 +275,13 @@ public class LauncherCLI {
                 .setUpdatePolicy(LaunchOptions.UpdatePolicy.UPDATE_IF_SESSION_ONLINE)
                 .build();
         
-        // Step 3: Launch the game
+        // Step 3: Launch game
         System.out.println(DIM + "Preparing to launch..." + RESET);
         System.out.println();
         
         try {
             launcher.getLaunchSupervisor().launch(options);
-            System.out.println(GREEN + "Game launched! The launcher will close when the game exits." + RESET);
+            System.out.println(GREEN + "Done! Game launched." + RESET); // Done! Game launched in [time] seconds. 
         } catch (Exception e) {
             System.out.println(RED + "Launch failed: " + e.getMessage() + RESET);
             LOGGER.severe("Launch error: " + e.getMessage());
@@ -297,15 +301,11 @@ public class LauncherCLI {
         @Override
         public void gameStarted() {
             System.out.println(GREEN + "\n=== GAME STARTED ==="  + RESET);
-            System.out.println(DIM + "Azulejo is running in the background." + RESET);
-            System.out.println(DIM + "The launcher will close when you exit the game." + RESET);
         }
         
         @Override
         public void gameClosed() {
-            System.out.println(YELLOW + "\nGame closed. Goodbye!" + RESET);
-            scanner.close();
-            System.exit(0);
+            System.out.println(YELLOW + "\nGame closed." + RESET);
         }
     }
     
