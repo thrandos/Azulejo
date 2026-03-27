@@ -1,0 +1,5 @@
+public class ModrinthRook {
+    
+}
+
+// Downloads mod binaries from Modrinth via Labyrinth API.

@@ -1,0 +1,54 @@
+// hello build gradle
+
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = "com.thrandos.azulejo.main"
+}
+
+println """
+||::::::::::::::::::::::::::::||
+||                            ||
+||    A project by Thrandos   ||
+||          ___               ||
+||         |. .|  { ! }       ||
+||         |___|              ||
+||          L L               ||
+||          COASTLINE         ||
+||                            ||  
+|-           Azulejo          -|     
+||                            ||
+||   Output files will be in  ||
+||   [subproject]/build/libs  ||
+||                            ||
+||::::::::::::::::::::::::::::||
+"""
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+
+    group = 'com.thrandos'
+    version = '1.0.0'
+
+    // Compiles with Java 21 toolchain
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    sourceSets {
+        main {
+            resources {
+                srcDir(".../resources")
+            }
+        }
+    }
+}
