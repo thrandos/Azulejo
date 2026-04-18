@@ -9,7 +9,7 @@ repositories {
 }
 
 application {
-    mainClass = "com.thrandos.azulejo.main"
+    mainClass = "com.thrandos.azulejo.app.Azulejo"
 }
 
 println """
