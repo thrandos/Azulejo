@@ -1,4 +1,6 @@
-public class SkinFetch {
+package com.thrandos.azulejo.auth;
+
+public class SkinRook {
     
 }
 
@@ -8,3 +10,4 @@ public class SkinFetch {
    replaced with an in-house skin switching service, so
    a user can switch skins in the app.
 */
+

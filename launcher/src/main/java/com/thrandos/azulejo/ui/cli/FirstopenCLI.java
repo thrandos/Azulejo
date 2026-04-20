@@ -1,3 +1,5 @@
+package com.thrandos.azulejo.ui.cli;
+
 public class FirstopenCLI {
     
 }

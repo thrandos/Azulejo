@@ -4,20 +4,12 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.logging.Logger;
-
-import com.thrandos.azulejo.launcher.Configuration;
-import com.thrandos.azulejo.launcher.Instance;
-import com.thrandos.azulejo.launcher.InstanceList;
-import com.thrandos.azulejo.launcher.Launcher;
-import com.thrandos.azulejo.launcher.auth.AccountList;
-import com.thrandos.azulejo.launcher.auth.LoginService;
-import com.thrandos.azulejo.launcher.auth.SavedSession;
-import com.thrandos.azulejo.launcher.auth.Session;
-import com.thrandos.azulejo.launcher.launch.LaunchListener;
-import com.thrandos.azulejo.launcher.launch.LaunchOptions;
-import com.thrandos.azulejo.launcher.persistence.Persistence;
 
 /*
 
@@ -28,10 +20,10 @@ FYI I have never worked with CLI or ANSI codes before so good luck to me!
 
 */
 
-public class LauncherCLI {
+public final class LauncherCLI {
     private static final Logger LOGGER = Logger.getLogger(LauncherCLI.class.getName());
-    private static final String DEFAULT_INSTANCE_NAME = "default"; // lmao this is malpractice
-    private final Launcher launcher;
+    private static final String DEFAULT_INSTANCE_NAME = "default"; // lmao this is probably malpractice
+    private final LauncherBridge launcher;
     private final Scanner scanner = new Scanner(System.in);
     private String activeInstanceTitle = DEFAULT_INSTANCE_NAME; // this too
     
@@ -65,8 +57,143 @@ public class LauncherCLI {
 
     // ================================================================
 
-    public LauncherCLI(Launcher launcher) {
+    public LauncherCLI(LauncherBridge launcher) {
         this.launcher = launcher;
+    }
+
+    public interface LauncherBridge {
+        String getVersion();
+        InstanceListRef getInstances();
+        AccountStore getAccounts();
+        LoginServiceRef getLoginService(String type);
+        LaunchSupervisorRef getLaunchSupervisor();
+        ConfigurationRef getConfig();
+        PersistenceBridge getPersistence();
+    }
+
+    public interface InstanceRef {
+        boolean isInstalled();
+        String getTitle();
+        File getContentDir();
+    }
+
+    public interface InstanceListRef {
+        int size();
+        InstanceRef get(int index);
+        EnumeratorRef createEnumerator();
+    }
+
+    public interface EnumeratorRef {
+        void call() throws Exception;
+    }
+
+    public interface AccountStore {
+        int getSize();
+        SavedSessionRef getElementAt(int index);
+        void remove(SavedSessionRef session);
+    }
+
+    public interface SavedSessionRef {
+        String getType();
+        String getUsername();
+    }
+
+    public interface SessionRef {
+        String getName();
+    }
+
+    public interface LoginServiceRef {
+        SessionRef restore(SavedSessionRef session) throws Exception;
+    }
+
+    public interface LaunchListenerRef {
+        void instancesUpdated();
+        void gameStarted();
+        void gameClosed();
+    }
+
+    public interface LaunchSupervisorRef {
+        void launch(LaunchCommand command) throws Exception;
+    }
+
+    public interface ConfigurationRef {
+        int getMaxMemory();
+        void setMaxMemory(int value);
+        int getMinMemory();
+        void setMinMemory(int value);
+        String getJvmArgs();
+        void setJvmArgs(String args);
+        boolean isOfflineEnabled();
+        void setOfflineEnabled(boolean enabled);
+    }
+
+    public interface PersistenceBridge {
+        void commitAndForget(Object value) throws Exception;
+    }
+
+    public static final class LaunchCommand {
+        public enum UpdatePolicy {
+            UPDATE_IF_SESSION_ONLINE
+        }
+
+        private final InstanceRef instance;
+        private final SessionRef session;
+        private final LaunchListenerRef listener;
+        private final UpdatePolicy updatePolicy;
+
+        private LaunchCommand(Builder builder) {
+            this.instance = builder.instance;
+            this.session = builder.session;
+            this.listener = builder.listener;
+            this.updatePolicy = builder.updatePolicy;
+        }
+
+        public InstanceRef getInstance() {
+            return instance;
+        }
+
+        public SessionRef getSession() {
+            return session;
+        }
+
+        public LaunchListenerRef getListener() {
+            return listener;
+        }
+
+        public UpdatePolicy getUpdatePolicy() {
+            return updatePolicy;
+        }
+
+        public static final class Builder {
+            private InstanceRef instance;
+            private SessionRef session;
+            private LaunchListenerRef listener;
+            private UpdatePolicy updatePolicy = UpdatePolicy.UPDATE_IF_SESSION_ONLINE;
+
+            public Builder setInstance(InstanceRef instance) {
+                this.instance = instance;
+                return this;
+            }
+
+            public Builder setSession(SessionRef session) {
+                this.session = session;
+                return this;
+            }
+
+            public Builder setListener(LaunchListenerRef listener) {
+                this.listener = listener;
+                return this;
+            }
+
+            public Builder setUpdatePolicy(UpdatePolicy updatePolicy) {
+                this.updatePolicy = updatePolicy;
+                return this;
+            }
+
+            public LaunchCommand build() {
+                return new LaunchCommand(this);
+            }
+        }
     }
 
     public void run() {
@@ -78,7 +205,8 @@ public class LauncherCLI {
         
         // Show splash screen
         printGUI();
-        
+
+        while (true) {
             String input = scanner.nextLine().trim().toLowerCase();
             
             switch (input) {
@@ -106,6 +234,7 @@ public class LauncherCLI {
                     printPrompt();
                 }
             }
+        }
     }
     
     private void enableAnsiSupport() {
@@ -114,11 +243,10 @@ public class LauncherCLI {
         try {
             if (System.getProperty("os.name").toLowerCase().contains("win")) { // checks to see if OS name has "win" in it and enables it if it does
                 new ProcessBuilder("cmd", "/c", "").inheritIO().start().waitFor(); 
-            } 
-        catch (Exception ignored) {
+            }
+        } catch (Exception ignored) {
             // colors won't work if it fails (but that's all)
-            LOGGER.warning("Failed to enable ANSI support. If you are using an old version of Windows, the black-and-white inteface should fit right in.");
-        }
+            LOGGER.warning("Failed to enable ANSI support. If you are using an old version of Windows, the black-and-white interface should fit right in.");
         }
     }
     // TODO do this
@@ -186,14 +314,14 @@ public class LauncherCLI {
     
     // fun part
     private void launchGame() {
-        Instance instanceToLaunch = getActiveInstance();
+        InstanceRef instanceToLaunch = getActiveInstance();
         if (instanceToLaunch == null) {
             printPrompt();
             return;
         }
         
         // check for account
-        AccountList accounts = launcher.getAccounts();
+        AccountStore accounts = launcher.getAccounts();
         if (accounts.getSize() == 0) {
             System.out.println(RED + "\nNo accounts configured!" + RESET);
             System.out.println(YELLOW + "Please add a Microsoft account first." + RESET);
@@ -206,15 +334,14 @@ public class LauncherCLI {
     }
     
     // pick instance!
-    private Instance selectInstance(InstanceList instances) {
+    private InstanceRef selectInstance(InstanceListRef instances) {
         System.out.println();
         System.out.println(LIGHT_CYAN + "=== CHOOSE AN INSTANCE ===" + RESET);
         
         for (int i = 0; i < instances.size(); i++) {
-            Instance inst = instances.get(i);
+            InstanceRef inst = instances.get(i);
             String status = inst.isInstalled() ? GREEN + "[Ready]" : YELLOW + "[Installation Required]";
-            System.out.printf("%s  %%d. %s%%-25s %s%s%%n", WHITE, BRIGHT_WHITE, status, RESET);
-            System.out.printf("%s  %d. %s%-25s %s%s%n", WHITE, i + 1, BRIGHT_WHITE, inst.getTitle(), status, RESET);
+            System.out.printf("%s  %d. %s%-25s %s%s%n", WHITE, i + 1, BRIGHT_WHITE, inst.getTitle(), status, RESET); // ?
         }
         System.out.println(DIM + "  0. Cancel" + RESET);
         System.out.print(BRIGHT_WHITE + " \n> " + RESET);
@@ -234,8 +361,8 @@ public class LauncherCLI {
     }
     
     // this is the launch with progress seen above
-    private void launchWithProgress(Instance instance) {
-        SavedSession savedSession = launcher.getAccounts().getElementAt(0);
+    private void launchWithProgress(InstanceRef instance) {
+        SavedSessionRef savedSession = launcher.getAccounts().getElementAt(0);
         
         System.out.println();
         System.out.println(BRIGHT_WHITE + "||       Coastline is booting up.       ||" + RESET);
@@ -243,9 +370,9 @@ public class LauncherCLI {
         
         // Step 1: Restore session (authenticate)
         System.out.println(DIM + "Authenticating..." + RESET);
-        Session session;
+        SessionRef session;
         try {
-            LoginService loginService = launcher.getLoginService(savedSession.getType());
+            LoginServiceRef loginService = launcher.getLoginService(savedSession.getType());
             session = loginService.restore(savedSession);
             System.out.println(GREEN + "Logged in as " + session.getName() + RESET);
         } catch (Exception e) {
@@ -256,11 +383,11 @@ public class LauncherCLI {
         }
         
         // Step 2: Build launch options
-        LaunchOptions options = new LaunchOptions.Builder()
+        LaunchCommand options = new LaunchCommand.Builder()
                 .setInstance(instance)
                 .setSession(session)
                 .setListener(new CLILaunchListener())
-                .setUpdatePolicy(LaunchOptions.UpdatePolicy.UPDATE_IF_SESSION_ONLINE)
+            .setUpdatePolicy(LaunchCommand.UpdatePolicy.UPDATE_IF_SESSION_ONLINE)
                 .build();
         
         // Step 3: Launch game
@@ -279,7 +406,7 @@ public class LauncherCLI {
     
     // launch listener, prints status updates to console
 
-    private class CLILaunchListener implements LaunchListener {
+    private class CLILaunchListener implements LaunchListenerRef {
         @Override
         public void instancesUpdated() {
             System.out.println(DIM + "Instances updated." + RESET);
@@ -323,7 +450,7 @@ public class LauncherCLI {
     }
     
     private void openModsFolder() {
-        Instance instance = getActiveInstance();
+        InstanceRef instance = getActiveInstance();
         if (instance == null) {
             printPrompt();
             return;
@@ -347,7 +474,7 @@ public class LauncherCLI {
     private void refreshInstances() {
         System.out.println(YELLOW + "\nRefreshing instances..." + RESET);
         try {
-            InstanceList.Enumerator enumerator = launcher.getInstances().createEnumerator();
+            EnumeratorRef enumerator = launcher.getInstances().createEnumerator();
             enumerator.call();
             keepActiveInstanceValid(launcher.getInstances());
             System.out.println(GREEN + "Instances refreshed successfully!" + RESET);
@@ -360,7 +487,7 @@ public class LauncherCLI {
         boolean inMenu = true;
         
         while (inMenu) {
-            AccountList accounts = launcher.getAccounts();
+            AccountStore accounts = launcher.getAccounts();
             
             System.out.println();
             System.out.println(LIGHT_CYAN + "=== ACCOUNT MANAGEMENT ===" + RESET);
@@ -370,7 +497,7 @@ public class LauncherCLI {
                 System.out.println(DIM + "  No accounts configured" + RESET);
             } else {
                 for (int i = 0; i < accounts.getSize(); i++) {
-                    SavedSession session = accounts.getElementAt(i);
+                    SavedSessionRef session = accounts.getElementAt(i);
                     System.out.println(WHITE + "  " + (i + 1) + ". " + BRIGHT_WHITE + session.getUsername() + RESET);
                 }
             }
@@ -407,7 +534,7 @@ public class LauncherCLI {
     }
     
     private void removeAccount() {
-        AccountList accounts = launcher.getAccounts();
+        AccountStore accounts = launcher.getAccounts();
         if (accounts.getSize() == 0) {
             System.out.println(RED + "\nNo accounts to remove." + RESET);
             return;
@@ -422,10 +549,14 @@ public class LauncherCLI {
                 return;
             }
             
-            SavedSession session = accounts.getElementAt(choice - 1);
+            SavedSessionRef session = accounts.getElementAt(choice - 1);
             accounts.remove(session);
-            Persistence.commitAndForget(accounts);
-            System.out.println(GREEN + "Removed: " + session.getUsername() + RESET);
+            try {
+                launcher.getPersistence().commitAndForget(accounts);
+                System.out.println(GREEN + "Removed " + session.getUsername() + RESET);
+            } catch (Exception e) {
+                System.out.println(RED + "Removed account " + e.getMessage() + ", but failed to persist changes." + RESET);
+            }
         } catch (NumberFormatException e) {
             System.out.println(RED + "Invalid input." + RESET);
         }
@@ -435,7 +566,7 @@ public class LauncherCLI {
         boolean inMenu = true;
         
         while (inMenu) {
-            Configuration config = launcher.getConfig();
+            ConfigurationRef config = launcher.getConfig();
             
             System.out.println();
             System.out.println(LIGHT_CYAN + "=== SETTINGS ===" + RESET);
@@ -475,7 +606,7 @@ public class LauncherCLI {
     }
 
     // The memory configuration screen.
-    private void configureMemory(Configuration config) {
+    private void configureMemory(ConfigurationRef config) {
         System.out.println();
         System.out.println(BRIGHT_WHITE + "Memory Configuration" + RESET);
         
@@ -507,7 +638,7 @@ public class LauncherCLI {
         }
     }
     
-    private void configureLaunchArgs(Configuration config) {
+    private void configureLaunchArgs(ConfigurationRef config) {
         System.out.println();
         System.out.println(BRIGHT_WHITE + "JVM Arguments" + RESET);
         System.out.println(DIM + "Current: " + (config.getJvmArgs() != null ? config.getJvmArgs() : "(none)") + RESET);
@@ -518,7 +649,7 @@ public class LauncherCLI {
         System.out.println(GREEN + "JVM arguments updated." + RESET);
     }
     
-    private void resetSettings(Configuration config) {
+    private void resetSettings(ConfigurationRef config) {
         System.out.print(YELLOW + "Reset all settings to defaults? (Y/N): " + RESET);
         String confirm = scanner.nextLine().trim().toLowerCase();
         
@@ -532,11 +663,9 @@ public class LauncherCLI {
         } else {
             System.out.println(DIM + "Reset cancelled." + RESET);
         }
-    }
-    
-    private void saveSettings(Configuration config) {
+    }    private void saveSettings(ConfigurationRef config) {
         try {
-            Persistence.commitAndForget(config);
+            launcher.getPersistence().commitAndForget(config);
             System.out.println(GREEN + "Settings saved." + RESET);
         } catch (Exception e) {
             System.out.println(RED + "Failed to save: " + e.getMessage() + RESET);
@@ -547,8 +676,8 @@ public class LauncherCLI {
         keepActiveInstanceValid(launcher.getInstances());
     }
 
-    private Instance getActiveInstance() {
-        InstanceList instances = launcher.getInstances();
+    private InstanceRef getActiveInstance() {
+        InstanceListRef instances = launcher.getInstances();
 
         if (instances.size() == 0) {
             System.out.println(YELLOW + "\nNo instances found. Refreshing..." + RESET);
@@ -566,7 +695,7 @@ public class LauncherCLI {
     }
 
     private void switchActiveInstance() {
-        InstanceList instances = launcher.getInstances();
+        InstanceListRef instances = launcher.getInstances();
         if (instances.size() == 0) {
             System.out.println(YELLOW + "\nNo instances found. Refreshing..." + RESET);
             refreshInstances();
@@ -583,7 +712,7 @@ public class LauncherCLI {
         System.out.println();
         System.out.println(LIGHT_CYAN + "=== SWITCH ACTIVE INSTANCE ===" + RESET);
         for (int i = 0; i < instances.size(); i++) {
-            Instance inst = instances.get(i);
+            InstanceRef inst = instances.get(i);
             String marker = inst.getTitle().equalsIgnoreCase(activeInstanceTitle) ? LIGHT_GREEN + "[ACTIVE] " : "         ";
             String status = inst.isInstalled() ? GREEN + "[Ready]" : YELLOW + "[Installation Required]";
             System.out.printf("%s%s%d. %s%-25s %s%s%n", WHITE, marker, i + 1, BRIGHT_WHITE, inst.getTitle(), status, RESET);
@@ -600,7 +729,7 @@ public class LauncherCLI {
                 System.out.println(RED + "Invalid selection." + RESET);
                 return;
             }
-            Instance selected = instances.get(choice - 1);
+            InstanceRef selected = instances.get(choice - 1);
             activeInstanceTitle = selected.getTitle();
             System.out.println(GREEN + "Active instance set to: " + activeInstanceTitle + RESET);
         } catch (NumberFormatException e) {
@@ -608,18 +737,18 @@ public class LauncherCLI {
         }
     }
 
-    private void keepActiveInstanceValid(InstanceList instances) {
+    private void keepActiveInstanceValid(InstanceListRef instances) {
         if (instances.size() == 0) {
             activeInstanceTitle = DEFAULT_INSTANCE_NAME;
             return;
         }
 
-        Instance active = findInstanceByTitle(instances, activeInstanceTitle);
+        InstanceRef active = findInstanceByTitle(instances, activeInstanceTitle);
         if (active != null) {
             return;
         }
 
-        Instance defaultInstance = findInstanceByTitle(instances, DEFAULT_INSTANCE_NAME);
+        InstanceRef defaultInstance = findInstanceByTitle(instances, DEFAULT_INSTANCE_NAME);
         if (defaultInstance != null) {
             activeInstanceTitle = defaultInstance.getTitle();
             return;
@@ -628,9 +757,9 @@ public class LauncherCLI {
         activeInstanceTitle = instances.get(0).getTitle();
     }
 
-    private Instance findInstanceByTitle(InstanceList instances, String title) {
+    private InstanceRef findInstanceByTitle(InstanceListRef instances, String title) {
         for (int i = 0; i < instances.size(); i++) {
-            Instance instance = instances.get(i);
+            InstanceRef instance = instances.get(i);
             if (instance.getTitle().equalsIgnoreCase(title)) {
                 return instance;
             }

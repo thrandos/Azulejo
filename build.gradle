@@ -1,38 +1,37 @@
 // hello build gradle
 
 plugins {
-    id 'java'
-}
-
-repositories {
-    mavenCentral()
-}
-
-application {
-    mainClass = "com.thrandos.azulejo.app.Azulejo"
+    id 'base'
 }
 
 println """
-||::::::::::::::::::::::::::::||
-||                            ||
-||    A project by Thrandos   ||
-||          ___               ||
-||         |. .|  { ! }       ||
-||         |___|              ||
-||          L L               ||
-||          COASTLINE         ||
-||                            ||  
-|-           Azulejo          -|     
-||                            ||
-||   Output files will be in  ||
-||   [subproject]/build/libs  ||
-||                            ||
-||::::::::::::::::::::::::::::||
+[|::::::::::::::::::::::::::::::::::::|]
+||                                    ||
+||        A project by Thrandos       ||
+||              ___                   ||
+||             |. .|  { ! }           ||
+||             |___|                  ||
+||              L L                   ||
+||                                    ||
+||              COASTLINE             ||
+||                                    ||  
+|-               Azulejo              -|     
+||                                    ||
+||       Output files will be in      ||
+||           launcher/build           ||
+||                 or                 ||
+||         startup-agent/build        ||
+||                                    ||
+[|::::::::::::::::::::::::::::::::::::|]
 """
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'application'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
 
     group = 'com.thrandos'
     version = '1.0.0'
@@ -44,11 +43,12 @@ subprojects {
         }
     }
 
-    sourceSets {
-        main {
-            resources {
-                srcDir(".../resources")
-            }
-        }
+    dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.38'
+        annotationProcessor 'org.projectlombok:lombok:1.18.38'
+
+        implementation 'org.json:json:20240303'
+        // implementation 'com.github.winDPAPI4j:winDPAPI:2.0'
+
     }
 }

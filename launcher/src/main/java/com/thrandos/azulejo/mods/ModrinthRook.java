@@ -1,3 +1,5 @@
+package com.thrandos.azulejo.mods;
+
 public class ModrinthRook {
     
 }

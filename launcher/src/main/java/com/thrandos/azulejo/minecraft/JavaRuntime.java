@@ -1,3 +1,5 @@
+package com.thrandos.azulejo.minecraft;
+
 public class JavaRuntime {
     
 }

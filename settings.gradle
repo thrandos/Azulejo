@@ -1,0 +1,3 @@
+rootProject.name = 'Azulejo'
+include('launcher')
+include('startup-agent')

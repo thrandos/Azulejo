@@ -1,4 +1,6 @@
-public class ModMerge {
+package com.thrandos.azulejo.run;
+
+public class ModManager {
     
 }
 

@@ -105,7 +105,6 @@ public class AuthRook {
     }
 
     // swaps auth code for microsoft access token
-
     private String exchangeCodeForMSToken(String code) throws Exception {
         String body = "client_id=" + URLEncoder.encode(clientId, StandardCharsets.UTF_8)
                 + "&code=" + URLEncoder.encode(code, StandardCharsets.UTF_8)
@@ -204,9 +203,9 @@ public class AuthRook {
         return new PlayerProfile(uuid, name, mcAccessToken, skinUrl);
     }
 
-    // yaaay helpers (which I did not write)
+    // yaaay helpers
 
-    /** POST application/x-www-form-urlencoded and return the JSON response. */
+    // POST application/x-www-form-urlencoded and return the JSON response.
     private JSONObject postForm(String url, String body) throws Exception {
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -221,7 +220,7 @@ public class AuthRook {
         return new JSONObject(resp.body());
     }
 
-    /** POST application/json and return the JSON response. */
+    // POST application/json and return the JSON response.
     private JSONObject postJson(String url, JSONObject payload) throws Exception {
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -238,7 +237,7 @@ public class AuthRook {
         return new JSONObject(resp.body());
     }
 
-    /** Pull a single query-string parameter out of a raw query string. */
+    // Pull a single query-string parameter out of a raw query string.
     private static String extractParam(String query, String name) {
         if (query == null) {
             return null;
@@ -252,7 +251,7 @@ public class AuthRook {
         return null;
     }
 
-    /** Pull the active skin URL out of the profile skins array. */
+    // Pull the active skin URL out of the profile skins array.
     private static String extractSkinUrl(JSONObject profile) {
         try {
             JSONArray skins = profile.getJSONArray("skins");
@@ -268,7 +267,7 @@ public class AuthRook {
         return null;
     }
 
-    /** Human-readable message for common XSTS error codes. */
+    // translates common XSTS error codes into something understandable
     private static String xstsErrorMessage(long xErr) {
         return switch ((int) xErr) {
             case 0x8015DC0B ->  // error 2148916235
@@ -283,9 +282,9 @@ public class AuthRook {
         };
     }
 
-    // ── Records ────────────────────────────────────────────────────────────────
+    // Records
 
-    /** Intermediate Xbox token + associated user hash. */
+    // Intermediate Xbox token + associated user hash
     public record XboxTokenResult(String token, String userHash) {}
 
     /**
@@ -318,7 +317,7 @@ public class AuthRook {
         }
     }
 
-    // ── Quick test ─────────────────────────────────────────────────────────────
+    // Quick test
 
     public static void main(String[] args) throws Exception {
         // Replace with your Azure Application (client) ID

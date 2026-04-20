@@ -1,3 +1,5 @@
+package com.thrandos.azulejo.packwell;
+
 public class PackwellManifest {
     
 }

@@ -9,6 +9,7 @@ public final class Azulejo {
         // static entrypoint class
     }
 
+
     public static void main(String[] args) {
         try {
             boot(args); // boots with args
@@ -18,15 +19,15 @@ public final class Azulejo {
             System.exit(1); 
         }
     }
-
+    
     private static void boot(String[] args) {
         log.info("Starting Azulejo...");
 
         diag();
         update();
         login();
-        bootstrap();
-        presentGUI(args);
+        agent();
+        helloGUI(args);
     }
 
     // ---- all the things found in boot() ----------------------------------------------------------------------------------------------------------
@@ -64,14 +65,14 @@ public final class Azulejo {
         // If missing, mark needsSignin as true, triggers signin flow
 
         if (needsSignin) {
-            log.info("User sign-in required.");
+            log.info("Sign-in required.");
         }
     }
 
 
     // Checks if bootstrapper is enabled
-    private static void bootstrap() {
-        log.info("Checking if bootstrapper is enabled...");
+    private static void agent() {
+        log.info("Checking if startup agent is enabled...");
 
         boolean bootstrapperEnabled = false;
         boolean bootstrapperRunning = false;
@@ -81,15 +82,15 @@ public final class Azulejo {
             // If not on, turn it on
         // If no, do nothing
 
+        
         if (bootstrapperEnabled && !bootstrapperRunning) {
-            log.info("Bootstrapper is enabled but not running; startup action required.");
+            log.info("Startup agent is enabled but not running.");
         }
     }
 
-    // 
 
     // Opens CLI
-    private static void presentGUI(String[] args) {
+    private static void helloGUI(String[] args) {
         log.info("Opening CLI...");
         log.fine("CLI args: " + String.join(", ", args));
 
